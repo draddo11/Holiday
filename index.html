@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderAI - Offline Travel Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <header>
+        <h1>WanderAI</h1>
+        <p>Your AI-Powered Offline Travel Planner</p>
+    </header>
+    <main>
+        <div id="input-container">
+            <h2>Create Your Itinerary</h2>
+            <input type="text" id="destinationInput" placeholder="Enter destination (e.g., Paris for 3 days)">
+            <textarea id="detailsInput" placeholder="Optional details (e.g., interests like food and history)"></textarea>
+            <button id="generateBtn">Generate Itinerary</button>
+        </div>
+        <div id="itinerary-container">
+            <h2>Your Itinerary</h2>
+            <div id="itineraryOutput"></div>
+        </div>
+        <div id="customization-container">
+            <h2>Customize Your Plan</h2>
+            <textarea id="rewriteInput" placeholder="e.g., Rewrite for a low budget, Make it more adventurous"></textarea>
+            <button id="rewriteBtn">Rewrite Plan</button>
+        </div>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
