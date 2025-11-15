@@ -1,37 +1,234 @@
-# Product Requirements Document: WanderAI
 
-## 1. Introduction
 
-WanderAI is an AI-powered offline travel planner. It is a Progressive Web App (PWA) that runs entirely on the client-side, using the browser's built-in AI APIs. This allows for offline performance, privacy, and personalization.
+are# **AI Coding Agent – Product Requirements Document (PRD)**
 
-## 2. Goal
+## **Project: TravelSnap — Fun Holiday Destination Explorer + AI Photo Placement**
 
-The goal of WanderAI is to provide travelers with a powerful and reliable tool for planning their trips, even when they don't have an internet connection. It aims to solve common travel pain points like unreliable internet, language barriers, and scattered planning.
+---
 
-## 3. Core Features
+## **1. Project Summary**
 
-*   **Destination Input and Itinerary Generation:** Users can input a destination and receive a tailored itinerary.
-*   **Attraction Summaries:** The application provides concise overviews of attractions.
-*   **Language Translation:** The application can translate key phrases into the destination's language.
-*   **Plan Customization:** Users can rewrite their plans based on their preferences (e.g., budget, interests).
-*   **Offline Storage:** Plans are saved to the browser's local storage for offline access.
+Build a simple, polished web app that:
 
-## 4. Technical Stack
+1. **Shows popular holiday destinations**
+2. **Displays places, activities, shows, and quick facts**
+3. **Lets users upload a picture**
+4. **Uses AI to place the user into a famous landmark scene** (e.g., user at Eiffel Tower in a fun pose)
 
-*   **Frontend:** Vanilla HTML, CSS, and JavaScript.
-*   **PWA:** The application is a PWA with a `manifest.json` file and a service worker for offline caching.
+The app should be lightweight, creative, and demo-friendly for a 3-minute hackathon presentation.
 
-## 5. AI Integration
+---
 
-The application uses the browser's built-in AI APIs (`window.ai`).
+## **2. Main Features**
 
-*   **Prompt API:** Used to generate the travel itinerary.
-*   **Summarizer API:** Used to summarize attractions.
-*   **Translator API:** Used to translate phrases.
-*   **Rewriter API:** Currently mocked due to availability issues.
+### **2.1 Destination Explorer (Core)**
 
-## 6. Future Enhancements
+* Display 5–10 holiday destinations
 
-*   **Multimodal Input:** Allow users to input a destination by uploading an image.
-*   **Online Sync:** Add an option to sync plans with a cloud service.
-*   **Real-time Maps:** Integrate a real-time map service.
+* Each destination must show:
+
+  * 3–5 places to visit
+  * 2–4 shows/activities
+  * Quick facts (2–3 lines)
+  * A destination image
+
+* UI should allow users to:
+
+  * Click a destination
+  * See a simple details page / modal
+  * View the quick facts and recommended places
+
+---
+
+### **2.2 AI Photo Placement Feature (Core)**
+
+Allow users to:
+
+1. **Upload an image of themselves**
+2. **Choose a landmark** (Eiffel Tower, Times Square, Santorini, etc.)
+3. AI generates:
+
+   * User placed inside the scene
+   * Fun pose
+   * Matching lighting + background
+
+**Implementation constraints:**
+
+* Prefer a single API call (image-to-image + background replacement)
+* Accept JPG/PNG
+* Output should be a single combined image
+
+If possible, allow **2–3 pose variations** (funny, cinematic, casual).
+
+---
+
+### **2.3 Onboarding / How It Works**
+
+Provide a simple explanation:
+
+* What the app does
+* How to upload a picture
+* How to explore destinations
+
+This must be available as a link or a small card on the Home Page.
+
+---
+
+## **3. Stretch Features (Optional)**
+
+If time permits, the agent may include:
+
+* Save/share the generated image
+* Simple animations on cards
+* Auto-generated mini description of the user’s “travel postcard”
+* Fun “randomize my destination” button
+
+Not required but nice for polish.
+
+---
+
+## **4. Technical Requirements**
+
+### **Frontend**
+
+* React OR Next.js (preferred)
+* Clean, modern layout
+* Responsive design
+* Minimalistic color palette
+
+### **Backend (Optional)**
+
+If needed for the AI endpoint:
+
+* Lightweight serverless function (Vercel / Cloudflare)
+* Firebase or Supabase storage (optional)
+
+### **AI Image Feature**
+
+Use one of the following (agent chooses the easiest option):
+
+* Stable Diffusion (image-to-image + background replacement)
+* Replicate API
+* HuggingFace inference
+* Any image editing API with:
+
+  * background removal
+  * composition
+  * inpainting
+
+**Important:**
+The final result must clearly place the user in the landmark.
+
+---
+
+## **5. Pages / UI Structure**
+
+### **5.1 Home Page**
+
+* App name: **TravelSnap**
+* “Explore Destinations” button
+* “Create Travel Photo” button
+* Simple intro text
+* Nice hero image or animation
+
+### **5.2 Destinations Page**
+
+* Grid of destination cards
+* Each card: image, name, short tagline
+* Clicking opens:
+
+  * Places to visit
+  * Shows/activities
+  * Quick facts
+
+### **5.3 AI Photo Page**
+
+* File upload
+* Dropdown to select landmark
+* “Generate Travel Photo” button
+* Loading indicator
+* Output image displayed in a card
+
+### **5.4 How It Works Page**
+
+* 4–6 bullet points guiding the user
+* Short and easy to read
+
+---
+
+## **6. Non-Functional Requirements**
+
+* App must load fast (<3 sec)
+* Must be mobile responsive
+* No major UI bugs
+* AI generation should complete in <20 seconds
+* No login required (keep simple!)
+
+---
+
+## **7. Deliverables for the Hackathon**
+
+### **7.1 Working Deployed Web App**
+
+* Hosted on Vercel or Netlify
+* Publicly accessible URL
+
+### **7.2 GitHub Repository**
+
+Must include:
+
+* Source code
+* README with:
+
+  * description
+  * setup
+  * features
+  * how to use
+  * tech stack
+
+### **7.3 2–3 Sentence Project Summary**
+
+AI Coding Agent must generate this.
+
+### **7.4 Demo Video Script (3 minutes)**
+
+AI must write:
+
+* intro
+* problem
+* features
+* demo steps
+* tech used
+* challenges & learnings
+
+---
+
+## **8. Acceptance Criteria**
+
+A complete version includes:
+
+* [ ] Destination Explorer fully functional
+* [ ] At least 5 destinations with places + shows
+* [ ] User image upload working
+* [ ] AI-generated “user-in-landmark” image working
+* [ ] Clean UI and mobile responsive
+* [ ] Deployed website
+* [ ] README completed
+* [ ] Demo script produced
+
+---
+
+## **9. Creativity Requirements (Important for Judging)**
+
+To maximize creativity score:
+
+* Destination cards should be colorful and fun
+* AI results must look playful and entertaining
+* Use small animations or micro-interactions
+* Provide fun text like:
+
+  * **“You’re now in Paris!”**
+  * **“Here’s your travel postcard!”**
+
+---
+

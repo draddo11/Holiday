@@ -3,64 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="origin-trial" content="A/EGsaF5VQpYrqCKqGK/hmx58RM2+fehsytnWwJtx1vD2ufFmrIDekmA3jiG7zkpA0onc1s3GmAX5dcyCmPmew0AAABieyJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjU1MDAiLCJmZWF0dXJlIjoiQUlXcml0ZXJBUEkiLCJleHBpcnkiOjE3Njk0NzIwMDAsImlzVGhpcmRQYXJ0eSI6dHJ1ZX0=">
-    <meta http-equiv="origin-trial" content="A2Kax4GCLCPiYPpWeD3uqtk8uGBZHeGfZv6pS5LrGZz4Fm54u4RETfbiWQIkoI8PganGnmuLVE7Ii1ErxWOBtgEAAABkeyJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjU1MDAiLCJmZWF0dXJlIjoiQUlSZXdyaXRlckFQSSIsImV4cGlyeSI6MTc2OTQ3MjAwMCwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ==">
-    <title>WanderAI - Offline Travel Planner</title>
+    <title>TravelSnap</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/shoelace.js"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <header>
-        <h1>WanderAI</h1>
-        <p>Your AI-Powered Offline Travel Planner</p>
+        <div class="logo">TravelSnap</div>
+        <nav>
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#destinations" class="nav-link">Destinations</a>
+            <a href="#ai-photo" class="nav-link">Create</a>
+        </nav>
     </header>
+
     <main>
-        <section id="input-container">
-            <h2>Create Your Itinerary</h2>
-            <div class="input-group">
-                <input type="text" id="destinationInput" placeholder="Enter destination (e.g., Paris for 3 days)">
-                <label for="destinationInput">Destination</label>
+        <section id="home">
+            <div class="hero">
+                <h1>Your next adventure awaits</h1>
+                <p>Explore destinations and create personalized travel photos with AI.</p>
+                <sl-button variant="primary" size="large" onclick="document.querySelector('a[href=\'#destinations\']').click();">
+                    Start Exploring
+                </sl-button>
             </div>
-            <div class="input-group">
-                <textarea id="detailsInput" placeholder="Optional details (e.g., interests like food and history)"></textarea>
-                <label for="detailsInput">Details</label>
-            </div>
-            <button id="generateBtn">Generate Itinerary</button>
         </section>
-        <section id="itinerary-container">
-            <h2>Your Itinerary</h2>
-            <div id="itineraryOutput"></div>
+
+        <section id="destinations" class="hidden">
+            <h2>Top Destinations</h2>
+            <div id="destination-grid" class="grid-container">
+                <!-- Destination cards will be injected here -->
+            </div>
         </section>
-        <section id="customization-container">
-            <h2>Customize Your Plan</h2>
-            <div class="input-group">
-                <textarea id="rewriteInput" placeholder="e.g., Rewrite for a low budget, Make it more adventurous"></textarea>
-                <label for="rewriteInput">Rewrite Instructions</label>
+
+        <section id="ai-photo" class="hidden">
+            <h2>Create Your Travel Photo</h2>
+            <div class="ai-photo-section">
+                <div class="ai-photo-controls">
+                    <sl-input type="file" id="image-upload" label="1. Upload Your Picture" accept="image/jpeg, image/png"></sl-input>
+                    <sl-input id="location-input" label="2. Enter a Location" placeholder="e.g., Taj Mahal"></sl-input>
+                    <sl-button id="generate-photo-btn" variant="primary" size="large">
+                        Generate Photo
+                    </sl-button>
+                </div>
+                <div class="ai-photo-output">
+                    <sl-spinner id="loading-indicator" class="hidden"></sl-spinner>
+                    <div id="output-image-container">
+                        <!-- Generated image will be displayed here -->
+                    </div>
+                </div>
             </div>
-            <button id="rewriteBtn">Rewrite Plan</button>
-        </section>
-        <section id="additional-features">
-            <h2>Additional Features</h2>
-            <div class="input-group">
-                <textarea id="summaryInput" placeholder="Enter text to summarize (e.g., itinerary details)"></textarea>
-                <label for="summaryInput">Text to Summarize</label>
-            </div>
-            <button id="summarizeBtn">Summarize Text</button>
-            <div class="input-group">
-                <input id="phraseInput" placeholder="Enter phrase to translate (e.g., 'Hello')">
-                <label for="phraseInput">Phrase</label>
-            </div>
-            <div class="input-group">
-                <select id="langSelect">
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                </select>
-                <label for="langSelect">Language</label>
-            </div>
-            <button id="translateBtn">Translate Phrase</button>
         </section>
     </main>
+
     <script src="app.js"></script>
 </body>
 </html>

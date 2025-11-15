@@ -1,133 +1,164 @@
-/* Material Design 3-inspired styles */
-:root {
-    --primary: #6200EE; /* M3 primary color */
-    --on-primary: #FFFFFF;
-    --surface: #F5F5F5;
-    --on-surface: #1C2526;
-    --outline: #757575;
-    --elevation-1: #FFFFFF;
-    --elevation-2: #E8EAF6;
-    --corner-radius: 8px;
-    --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
+/* Airbnb Inspired UI */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--font-family);
+/* --- Color Palette & Typography --- */
+:root {
+    --brand-primary: #FF5A5F; /* Airbnb's coral red */
+    --brand-dark: #484848;
+    --brand-light: #767676;
+    --border-color: #EBEBEB;
+    --background-color: #FFFFFF;
+    --font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
 body {
-    background-color: var(--surface);
-    color: var(--on-surface);
-    padding: 16px;
-    max-width: 800px;
-    margin: 0 auto;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--brand-dark);
+    margin: 0;
 }
 
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+/* --- Header & Navigation --- */
 header {
-    text-align: center;
-    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-header h1 {
-    font-size: 32px;
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--brand-primary);
+}
+
+nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--brand-dark);
     font-weight: 500;
-    color: var(--primary);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom-color 0.3s ease;
 }
 
-header p {
-    font-size: 16px;
-    color: var(--on-surface);
-    opacity: 0.7;
+.nav-link:hover, .nav-link.active {
+    border-bottom-color: var(--brand-primary);
+}
+
+/* --- Main Content & Layout --- */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
 }
 
 section {
-    background-color: var(--elevation-1);
-    border-radius: var(--corner-radius);
-    padding: 16px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 4rem;
 }
 
-h2 {
-    font-size: 20px;
-    font-weight: 500;
-    margin-bottom: 16px;
-    color: var(--on-surface);
+/* --- Homepage --- */
+.hero {
+    text-align: center;
+    padding: 4rem 0;
 }
 
-.input-group {
-    position: relative;
-    margin-bottom: 20px;
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
-.input-group label {
-    position: absolute;
-    top: -8px;
-    left: 12px;
-    background-color: var(--elevation-1);
-    padding: 0 4px;
-    font-size: 12px;
-    color: var(--on-surface);
-    opacity: 0.6;
+.hero p {
+    font-size: 1.2rem;
+    color: var(--brand-light);
+    margin-bottom: 2rem;
 }
 
-input, textarea, select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--outline);
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: var(--elevation-2);
-    transition: border-color 0.2s;
+/* --- Destination Grid --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
 }
 
-textarea {
-    min-height: 80px;
-    resize: vertical;
-}
-
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-button {
-    padding: 10px 24px;
-    background-color: var(--primary);
-    color: var(--on-primary);
+.destination-card {
     border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
+    background: none;
     cursor: pointer;
-    transition: background-color 0.2s;
 }
 
-button:hover {
-    background-color: #3700B3;
+.destination-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
 }
 
-#itineraryOutput {
-    border: 1px solid var(--outline);
-    border-radius: 4px;
-    padding: 16px;
-    min-height: 100px;
-    background-color: var(--elevation-2);
+.destination-card .card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-    body {
-        padding: 8px;
-    }
-    header h1 {
-        font-size: 24px;
-    }
-    section {
-        padding: 12px;
-    }
+.destination-card .card-info {
+    color: var(--brand-light);
+    font-size: 0.9rem;
+}
+
+/* --- AI Photo Section --- */
+.ai-photo-section {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.ai-photo-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.ai-photo-output {
+    flex: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F7F7F7;
+    border-radius: 12px;
+    min-height: 300px;
+    padding: 1rem;
+}
+
+.generated-card {
+    text-align: center;
+}
+
+.generated-card img {
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+/* --- Shoelace Component Overrides --- */
+sl-button[variant="primary"] {
+    --background-color: var(--brand-primary);
+    --border-color: var(--brand-primary);
+}
+
+sl-input::part(base), sl-select::part(base) {
+    border-radius: 8px;
+}
+
+sl-dialog::part(panel) {
+    border-radius: 12px;
 }
