@@ -1,0 +1,9 @@
+# Environment variables
+# Ignore all .env files in any directory
+**/.env*
+
+# Dependencies
+**/node_modules
+
+# Python
+__pycache__/
