@@ -5,8 +5,8 @@
 Everything is set up for your Google Cloud project:
 
 **Project Details:**
-- Project ID: `gen-lang-client-0613158115`
-- Project Number: `383135404588`
+- Project ID: `resumehacathon`
+- Project Number: `219166804221`
 - Region: `us-central1`
 - Service Name: `travelsnap`
 
@@ -105,11 +105,11 @@ The deployment script will show:
 
 ### View Logs
 ```bash
-gcloud run logs tail travelsnap --region=us-central1 --project=gen-lang-client-0613158115
+gcloud run logs tail travelsnap --region=us-central1 --project=resumehacathon
 ```
 
 ### Cloud Console
-https://console.cloud.google.com/run/detail/us-central1/travelsnap?project=gen-lang-client-0613158115
+https://console.cloud.google.com/run/detail/us-central1/travelsnap?project=resumehacathon
 
 ## 🔄 Update Your App
 
@@ -128,25 +128,25 @@ It will:
 
 ```bash
 # View real-time logs
-gcloud run logs tail travelsnap --region=us-central1 --project=gen-lang-client-0613158115
+gcloud run logs tail travelsnap --region=us-central1 --project=resumehacathon
 
 # Get your app URL
-gcloud run services describe travelsnap --region=us-central1 --project=gen-lang-client-0613158115 --format='value(status.url)'
+gcloud run services describe travelsnap --region=us-central1 --project=resumehacathon --format='value(status.url)'
 
 # Check service status
-gcloud run services describe travelsnap --region=us-central1 --project=gen-lang-client-0613158115
+gcloud run services describe travelsnap --region=us-central1 --project=resumehacathon
 
 # Increase memory (if needed)
-gcloud run services update travelsnap --memory=4Gi --region=us-central1 --project=gen-lang-client-0613158115
+gcloud run services update travelsnap --memory=4Gi --region=us-central1 --project=resumehacathon
 
 # Delete service
-gcloud run services delete travelsnap --region=us-central1 --project=gen-lang-client-0613158115
+gcloud run services delete travelsnap --region=us-central1 --project=resumehacathon
 ```
 
 ## 🔍 Monitoring
 
 ### Cloud Console Dashboard
-https://console.cloud.google.com/run?project=gen-lang-client-0613158115
+https://console.cloud.google.com/run?project=resumehacathon
 
 Monitor:
 - Request count and latency
@@ -169,13 +169,13 @@ Your API keys are configured from `backend/.env`:
 For production, consider using Secret Manager:
 ```bash
 # Store secrets
-echo -n "$REPLICATE_API_TOKEN" | gcloud secrets create replicate-token --data-file=- --project=gen-lang-client-0613158115
+echo -n "$REPLICATE_API_TOKEN" | gcloud secrets create replicate-token --data-file=- --project=resumehacathon
 
 # Deploy with secrets
 gcloud run deploy travelsnap \
     --set-secrets=REPLICATE_API_TOKEN=replicate-token:latest \
     --region=us-central1 \
-    --project=gen-lang-client-0613158115
+    --project=resumehacathon
 ```
 
 ## 🎯 Next Steps
@@ -213,12 +213,12 @@ gcloud run deploy travelsnap \
 
 ### Build Fails
 ```bash
-gcloud builds list --project=gen-lang-client-0613158115 --limit=5
+gcloud builds list --project=resumehacathon --limit=5
 ```
 
 ### Service Not Responding
 ```bash
-gcloud run logs read travelsnap --region=us-central1 --project=gen-lang-client-0613158115 --limit=50
+gcloud run logs read travelsnap --region=us-central1 --project=resumehacathon --limit=50
 ```
 
 ### Need Help?

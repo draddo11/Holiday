@@ -16,7 +16,7 @@ if ! command -v gcloud &> /dev/null; then
 fi
 
 # Set project ID
-PROJECT_ID="gen-lang-client-0613158115"
+PROJECT_ID="resumehacathon"
 echo "Setting GCP project to: $PROJECT_ID"
 gcloud config set project $PROJECT_ID
 

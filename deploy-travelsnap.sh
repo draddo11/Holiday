@@ -10,8 +10,8 @@ echo "===================================="
 echo ""
 
 # Set project configuration
-PROJECT_ID="gen-lang-client-0613158115"
-PROJECT_NUMBER="383135404588"
+PROJECT_ID="resumehacathon"
+PROJECT_NUMBER="219166804221"
 REGION="us-central1"
 SERVICE_NAME="travelsnap"
 

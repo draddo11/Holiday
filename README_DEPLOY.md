@@ -13,7 +13,7 @@ That's it! Your app will be live in 5-10 minutes.
 ## What You Need
 
 1. ✅ Google Cloud account (you have this)
-2. ✅ Project ID: `gen-lang-client-0613158115` (configured)
+2. ✅ Project ID: `resumehacathon` (configured)
 3. ✅ API keys in `backend/.env` (you have this)
 4. ⚠️ gcloud CLI installed (install if needed)
 
@@ -76,7 +76,7 @@ Made changes? Just run the deploy script again:
 ## View Logs
 
 ```bash
-gcloud run logs tail travelsnap --region=us-central1 --project=gen-lang-client-0613158115
+gcloud run logs tail travelsnap --region=us-central1 --project=resumehacathon
 ```
 
 ## Need Help?
