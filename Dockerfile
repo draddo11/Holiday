@@ -1,10 +1,10 @@
 # Multi-stage build for React frontend and Flask backend
 
 # Stage 1: Build React frontend
-FROM node:18-alpine AS frontend-build
+FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY travelsnap-react/package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 COPY travelsnap-react/ ./
 RUN npm run build
 
