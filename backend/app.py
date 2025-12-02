@@ -1292,30 +1292,102 @@ if __name__ == '__main__':
 @app.route('/generate-weather-scene', methods=['POST'])
 def generate_weather_scene():
     """
-    Generate an isometric 3D weather scene using Gemini's Imagen 3
+    Generate an isometric 3D weather scene using Gemini's Imagen 3 with seasonal themes
     """
     try:
         data = request.json
         destination = data.get('destination', 'Paris')
         temperature = data.get('temperature', '25')
         weather_condition = data.get('weather_condition', 'sunny')
+        season = data.get('season', None)  # Optional season override
         
-        # Create a detailed prompt for isometric 3D scene (Nano Banana Pro style)
-        # Get current date
+        # Get current date and determine season
         from datetime import datetime
         current_date = datetime.now().strftime("%B %d, %Y")
+        current_month = datetime.now().month
         
-        prompt = f"""Present a clear, 45° top-down isometric miniature 3D cartoon scene of {destination}, featuring its most iconic landmarks and architectural elements. Use soft, refined textures with realistic PBR materials and gentle, lifelike lighting and shadows. Integrate the current weather conditions ({weather_condition}) directly into the city environment to create an immersive atmospheric mood.
+        # Auto-detect season if not provided
+        if not season:
+            if current_month in [10, 11]:  # Oct-Nov
+                season = 'halloween'
+            elif current_month in [12, 1]:  # Dec-Jan
+                season = 'christmas'
+            elif current_month in [6, 7, 8]:  # Jun-Aug
+                season = 'summer'
+            elif current_month in [3, 4, 5]:  # Mar-May
+                season = 'spring'
+            else:
+                season = 'default'
+        
+        # Seasonal theme elements
+        seasonal_elements = {
+            'halloween': {
+                'emojis': '🎃👻🦇🕷️',
+                'atmosphere': 'spooky twilight with orange and purple hues, jack-o-lanterns scattered around',
+                'decorations': 'Halloween decorations, cobwebs, bats flying',
+                'colors': 'orange, purple, and dark blue tones'
+            },
+            'christmas': {
+                'emojis': '🎄🎅❄️⛄🎁',
+                'atmosphere': 'festive winter wonderland with snow falling, twinkling lights',
+                'decorations': 'Christmas trees, presents, candy canes, snowflakes',
+                'colors': 'red, green, white, and gold tones'
+            },
+            'summer': {
+                'emojis': '☀️🏖️🌊🍹🏄',
+                'atmosphere': 'bright sunny day with clear blue skies, beach vibes',
+                'decorations': 'beach umbrellas, surfboards, palm trees, seashells',
+                'colors': 'bright yellow, turquoise, and sandy beige tones'
+            },
+            'spring': {
+                'emojis': '🌸🌷🦋🌈☘️',
+                'atmosphere': 'fresh spring day with blooming flowers, butterflies',
+                'decorations': 'cherry blossoms, tulips, rainbows, flower gardens',
+                'colors': 'pink, green, and pastel rainbow tones'
+            },
+            'default': {
+                'emojis': '✈️🌍🗺️🧳',
+                'atmosphere': 'clear day with professional travel aesthetic',
+                'decorations': 'travel elements, luggage, maps',
+                'colors': 'blue and neutral tones'
+            }
+        }
+        
+        theme = seasonal_elements.get(season, seasonal_elements['default'])
+        
+        # Create dynamic prompt with seasonal elements
+        prompt = f"""Present a clear, 45° top-down isometric miniature 3D cartoon scene of {destination}, featuring its most iconic landmarks and architectural elements. 
 
-Use a clean, minimalistic composition with a soft, solid-colored background.
+SEASONAL THEME: {season.upper()}
+Integrate these seasonal elements throughout the scene:
+- Atmosphere: {theme['atmosphere']}
+- Decorations: {theme['decorations']}
+- Color palette: {theme['colors']}
+- Thematic emojis to incorporate: {theme['emojis']}
 
-At the top-center, place the title "{destination}" in large bold text, a prominent weather icon beneath it, then the date "{current_date}" (small text) and temperature "{temperature}°C" (medium text).
+WEATHER: {weather_condition}
+Integrate the current weather conditions directly into the city environment to create an immersive atmospheric mood.
+
+COMPOSITION:
+- Use soft, refined textures with realistic PBR materials
+- Gentle, lifelike lighting and shadows
+- Clean, minimalistic composition with a soft, solid-colored background
+- Iconic landmarks should be recognizable but stylized
+
+TEXT OVERLAY (centered at top):
+1. "{destination}" - large bold text
+2. Weather icon - prominent
+3. "{current_date}" - small text
+4. "{temperature}°C" - medium text
 
 All text must be centered with consistent spacing, and may subtly overlap the tops of the buildings.
 
-Square 1080x1080 dimension.
-
-Style: Professional 3D isometric render with soft pastel colors, realistic PBR materials, gentle ambient lighting, and atmospheric depth."""
+TECHNICAL SPECS:
+- Square 1080x1080 dimension
+- Professional 3D isometric render
+- Soft pastel colors with seasonal accents
+- Atmospheric depth and dimension
+- High-quality Blender/Cinema 4D style"""
         
         print(f"Generating weather scene for {destination} using Gemini Imagen...")
         print(f"Prompt: {prompt}")

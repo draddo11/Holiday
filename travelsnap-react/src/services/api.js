@@ -86,12 +86,13 @@ export const generateAIItinerary = async (destination, origin, budget, days, int
 };
 
 
-export const generateWeatherScene = async (destination, temperature, weatherCondition) => {
+export const generateWeatherScene = async (destination, temperature, weatherCondition, season = null) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/generate-weather-scene`, {
       destination,
       temperature,
-      weather_condition: weatherCondition
+      weather_condition: weatherCondition,
+      season: season  // Optional: 'halloween', 'christmas', 'summer', 'spring', or null for auto-detect
     });
     return response.data;
   } catch (error) {
