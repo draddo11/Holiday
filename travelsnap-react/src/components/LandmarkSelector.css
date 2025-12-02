@@ -1,0 +1,55 @@
+.landmark-selector {
+  margin-bottom: 2rem;
+}
+
+.selector-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.landmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.landmark-option {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.landmark-option:hover {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.landmark-option.selected {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.landmark-option img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.landmark-info {
+  padding: 0.5rem;
+  background: white;
+}
+
+.landmark-info h4 {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.landmark-info p {
+  font-size: 0.75rem;
+  color: #666;
+}

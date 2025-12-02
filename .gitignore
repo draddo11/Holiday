@@ -1,9 +1,57 @@
 # Environment variables
-# Ignore all .env files in any directory
 **/.env*
+.env
+.env.local
+backend/.env
 
 # Dependencies
 **/node_modules
+node_modules/
 
 # Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+backend_debug.log
+backend_startup.log
+
+# Build files
+dist/
+dist-ssr/
+build/
+*.egg-info/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Kiro AI files
+.kiro/
+
+# Development notes
+docs/development-notes/
+
+# Archive
+archive/
+
+# OS files
+.DS_Store
+Thumbs.db

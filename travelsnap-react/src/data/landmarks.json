@@ -1,0 +1,37 @@
+[
+  {
+    "id": "eiffel-tower",
+    "name": "Eiffel Tower",
+    "location": "Paris, France",
+    "imageUrl": "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=400&h=300&fit=crop",
+    "backgroundPrompt": "Eiffel Tower in Paris with romantic lighting"
+  },
+  {
+    "id": "times-square",
+    "name": "Times Square",
+    "location": "New York, USA",
+    "imageUrl": "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=400&h=300&fit=crop",
+    "backgroundPrompt": "Times Square with bright lights and billboards"
+  },
+  {
+    "id": "santorini-sunset",
+    "name": "Santorini Sunset",
+    "location": "Santorini, Greece",
+    "imageUrl": "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=300&fit=crop",
+    "backgroundPrompt": "Santorini white buildings with blue domes at sunset"
+  },
+  {
+    "id": "tokyo-tower",
+    "name": "Tokyo Tower",
+    "location": "Tokyo, Japan",
+    "imageUrl": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop",
+    "backgroundPrompt": "Tokyo Tower with cherry blossoms"
+  },
+  {
+    "id": "sydney-opera",
+    "name": "Sydney Opera House",
+    "location": "Sydney, Australia",
+    "imageUrl": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=400&h=300&fit=crop",
+    "backgroundPrompt": "Sydney Opera House with harbour view"
+  }
+]

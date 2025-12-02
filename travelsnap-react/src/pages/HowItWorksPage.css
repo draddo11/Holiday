@@ -1,0 +1,51 @@
+.how-it-works-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.how-it-works-page h1 {
+  color: white;
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
+.instructions {
+  display: grid;
+  gap: 2rem;
+}
+
+.instruction-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.step-number {
+  background: #667eea;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.instruction-item h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.instruction-item p {
+  color: #666;
+  line-height: 1.6;
+}

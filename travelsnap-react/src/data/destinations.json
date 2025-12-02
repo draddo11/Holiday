@@ -1,0 +1,92 @@
+[
+  {
+    "id": "paris",
+    "name": "Paris",
+    "tagline": "The City of Love and Lights",
+    "imageUrl": "https://frenchmoments.eu/wp-content/uploads/2013/09/Paris-France-2-web-copyright-French-Moments-scaled-1.jpg",
+    "placesToVisit": ["Eiffel Tower", "Louvre Museum", "Notre Dame Cathedral", "Arc de Triomphe", "Montmartre"],
+    "showsActivities": ["Seine River Cruise", "Enjoy French Cuisine", "Explore Art Galleries", "Visit Versailles"],
+    "quickFacts": ["Capital of France", "Known for art, fashion, and gastronomy", "Home to the Eiffel Tower"],
+    "flightPriceInfo": {
+      "destinationId": "paris",
+      "averagePrice": 650,
+      "currency": "USD",
+      "fromLocation": "New York"
+    }
+  },
+  {
+    "id": "tokyo",
+    "name": "Tokyo",
+    "tagline": "A Blend of Tradition and Technology",
+    "imageUrl": "https://cdn-imgix.headout.com/media/images/68caee32b46762b2b4b85c70622057f5-Tokyo%20Tower%20card%20image.jpg",
+    "placesToVisit": ["Shibuya Crossing", "Senso-ji Temple", "Tokyo Skytree", "Imperial Palace"],
+    "showsActivities": ["Experience a Tea Ceremony", "Visit a Robot Restaurant", "Explore Akihabara"],
+    "quickFacts": ["Capital of Japan", "Most populous metropolis in the world", "Center for technology and pop culture"],
+    "flightPriceInfo": {
+      "destinationId": "tokyo",
+      "averagePrice": 850,
+      "currency": "USD",
+      "fromLocation": "Los Angeles"
+    }
+  },
+  {
+    "id": "santorini",
+    "name": "Santorini",
+    "tagline": "Breathtaking Sunsets",
+    "imageUrl": "https://media-cdn.tripadvisor.com/media/photo-m/1280/1d/81/30/3f/caption.jpg",
+    "placesToVisit": ["Oia", "Fira", "Akrotiri Archaeological Site", "Red Beach", "Amoudi Bay"],
+    "showsActivities": ["Sunset Cruise", "Wine Tasting", "Explore Volcanic Beaches"],
+    "quickFacts": ["Volcanic island in Greece", "Famous for caldera views", "Unique white and blue architecture"],
+    "flightPriceInfo": {
+      "destinationId": "santorini",
+      "averagePrice": 720,
+      "currency": "USD",
+      "fromLocation": "London"
+    }
+  },
+  {
+    "id": "new-york",
+    "name": "New York",
+    "tagline": "The City That Never Sleeps",
+    "imageUrl": "https://images.squarespace-cdn.com/content/v1/64029dd1934e23132f21c5a1/1681758635678-AXL2805J5X7LOYJ0I5NG/Statue-of-Liberty-NYC.jpg",
+    "placesToVisit": ["Statue of Liberty", "Times Square", "Central Park", "Empire State Building", "Brooklyn Bridge"],
+    "showsActivities": ["Broadway Show", "Visit Museums", "Walk Across Brooklyn Bridge", "Explore Fifth Avenue"],
+    "quickFacts": ["Most populous city in the US", "Global hub of finance and culture", "Home to the Statue of Liberty"],
+    "flightPriceInfo": {
+      "destinationId": "new-york",
+      "averagePrice": 350,
+      "currency": "USD",
+      "fromLocation": "Miami"
+    }
+  },
+  {
+    "id": "sydney",
+    "name": "Sydney",
+    "tagline": "Harbour Views and Iconic Landmarks",
+    "imageUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/93/a7/be/sydney-opera-house.jpg?w=500&h=500&s=1",
+    "placesToVisit": ["Sydney Opera House", "Sydney Harbour Bridge", "Bondi Beach", "The Rocks"],
+    "showsActivities": ["Climb the Harbour Bridge", "Surf at Bondi", "Explore the Royal Botanic Garden", "Coastal Walk"],
+    "quickFacts": ["Capital of New South Wales", "Known for the Opera House", "Beautiful harbour city"],
+    "flightPriceInfo": {
+      "destinationId": "sydney",
+      "averagePrice": 1200,
+      "currency": "USD",
+      "fromLocation": "San Francisco"
+    }
+  },
+  {
+    "id": "bali",
+    "name": "Bali",
+    "tagline": "The Island of the Gods",
+    "imageUrl": "https://www.gtholidays.in/wp-content/uploads/2022/11/Honeymoon-Package-Bali.jpg",
+    "placesToVisit": ["Ubud Monkey Forest", "Tanah Lot Temple", "Uluwatu Temple", "Tegallalang Rice Terraces", "Mount Batur"],
+    "showsActivities": ["Surfing in Kuta", "Yoga and Meditation in Ubud", "Explore Waterfalls"],
+    "quickFacts": ["Indonesian island", "Known for volcanic mountains and rice paddies", "Popular spiritual destination"],
+    "flightPriceInfo": {
+      "destinationId": "bali",
+      "averagePrice": 950,
+      "currency": "USD",
+      "fromLocation": "Singapore"
+    }
+  }
+]

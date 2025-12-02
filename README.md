@@ -1,100 +1,199 @@
-# TravelSnap: Fun Holiday Destination Explorer + AI Photo Placement
+# TravelSnap 🌍✈️
 
-## Project Summary
+**AI-Powered Trip Planning with Shareable Postcards**
 
-TravelSnap is a simple, polished web application designed to inspire travel and create fun, personalized memories. It allows users to explore popular holiday destinations with quick facts and activity suggestions. Its core feature is an AI-powered photo placement tool that lets users upload their picture and virtually place themselves into famous landmark scenes with a fun pose, generating a unique "travel postcard."
+TravelSnap is an intelligent travel planning application that generates personalized itineraries using real-time data and creates beautiful, shareable postcards of your trips.
 
-## Features
+## ✨ Features
 
-### Destination Explorer
-*   Browse 5 popular holiday destinations.
-*   Each destination displays 3-5 places to visit, 2-4 shows/activities, and quick facts.
-*   Simple UI to view destination details.
+### 🤖 AI Trip Planning
+- **Gemini AI Integration**: Intelligent itinerary generation
+- **Real Flight Prices**: Live data from SerpAPI
+- **Local Events**: Discover what's happening at your destination
+- **Weather Integration**: Current conditions and forecasts
+- **Budget Optimization**: Smart cost breakdown and recommendations
 
-### AI Photo Placement
-*   Upload a JPG/PNG image of yourself.
-*   Choose from a selection of famous landmarks (e.g., Eiffel Tower, Times Square, Santorini).
-*   AI generates a new image with you placed inside the chosen landmark scene, complete with a fun pose and matching lighting/background.
+### 🎨 Seasonal Postcards
+- **3D Flip Animation**: Interactive postcard with front and back
+- **Seasonal Themes**: Halloween, Christmas, Summer, Spring, and Classic
+- **Real Destination Photos**: High-quality images from Unsplash
+- **Landmark Emojis**: Iconic landmarks for major cities
+- **Download as PNG**: Share on social media
 
-### How It Works
-*   A dedicated section explaining the app's functionality and usage.
+### 🌤️ 3D Weather Cards
+- **AI-Generated Scenes**: Isometric 3D weather visualizations
+- **Destination-Specific**: Customized for each location
+- **Temperature & Conditions**: Real-time weather data
+- **Shareable**: Download and share your weather cards
 
-## Tech Stack
+### 🎯 Smart Features
+- **Surprise Me**: Random destination generator
+- **Custom Destinations**: Plan trips to anywhere
+- **Detailed Itineraries**: Day-by-day activities with costs
+- **Packing Lists**: AI-generated recommendations
+- **Travel Tips**: Local insights and advice
 
-*   **Frontend**: HTML, CSS, JavaScript
-*   **Backend**: Python (Flask)
-*   **AI Integration**: Replicate API (using the `851-labs/background-remover` model)
+## 🚀 Tech Stack
 
-## Setup Instructions
+### Frontend
+- **React** with Vite
+- **Material-UI (MUI)** for components
+- **html2canvas** for image generation
+- **Axios** for API calls
 
-To get TravelSnap up and running on your local machine, follow these steps:
+### Backend
+- **Flask** (Python)
+- **Google Gemini AI** for trip planning
+- **SerpAPI** for flight prices and events
+- **Replicate** for AI image generation
+- **Unsplash** for destination photos
 
-### 1. Clone the Repository
+## 📦 Installation
 
+### Prerequisites
+- Node.js 18+ and npm
+- Python 3.8+
+- API Keys:
+  - Google Gemini API
+  - SerpAPI
+  - Replicate (optional, for AI images)
+
+### Setup
+
+1. **Clone the repository**
 ```bash
-git clone <your-repository-url>
-cd Holiday # Or whatever your project directory is named
+git clone https://github.com/yourusername/travelsnap.git
+cd travelsnap
 ```
 
-### 2. Backend Setup
+2. **Backend Setup**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 
-The backend handles the AI integration with the Replicate API.
+# Create .env file
+cp .env.example .env
+# Add your API keys to .env
+```
 
-*   **Navigate to the backend directory:**
-    ```bash
-    cd backend
-    ```
-*   **Create a `.env` file:**
-    ```bash
-    touch .env
-    ```
-*   **Add your Replicate API Token:**
-    Open the newly created `.env` file and add your Replicate API token. You can obtain your token from [replicate.com/account/api-tokens](https://replicate.com/account/api-tokens).
-    ```
-    REPLICATE_API_TOKEN=YOUR_REPLICATE_API_TOKEN
-    ```
-    Replace `YOUR_REPLICATE_API_TOKEN` with your actual token.
-*   **Install Python dependencies:**
-    ```bash
-    pip install Flask Flask-CORS replicate requests python-dotenv
-    ```
-*   **Run the Flask backend server:**
-    ```bash
-    python app.py
-    ```
-    The server will start on `http://127.0.0.1:5000`. Keep this terminal window open.
+3. **Frontend Setup**
+```bash
+cd travelsnap-react
+npm install
+```
 
-### 3. Frontend Setup
+### Running the Application
 
-The frontend is a static web application.
+1. **Start the Backend**
+```bash
+cd backend
+source venv/bin/activate
+python app.py
+```
+Backend runs on `http://localhost:5001`
 
-*   **Navigate back to the project root directory:**
-    ```bash
-    cd ..
-    ```
-*   **Serve the frontend:**
-    You can use a simple HTTP server to serve the `index.html` file.
-    *   **Using Python's built-in HTTP server:**
-        ```bash
-        python -m http.server 8000
-        ```
-        Then, open your web browser and go to `http://localhost:8000/index.html`.
-    *   **Using `live-server` (if you have Node.js installed):**
-        ```bash
-        npx live-server
-        ```
-        This will automatically open the `index.html` in your browser.
+2. **Start the Frontend**
+```bash
+cd travelsnap-react
+npm run dev
+```
+Frontend runs on `http://localhost:5173`
 
-## How to Use
+3. **Open in Browser**
+Navigate to `http://localhost:5173`
 
-1.  **Explore Destinations:** On the homepage, click "Explore Destinations" or navigate to the "Destinations" section to see various holiday spots. Click "View Details" on any card to see more information (currently displayed as an alert).
-2.  **Create Travel Photo:** Navigate to the "Create Travel Photo" section.
-    *   Click "Upload Your Picture" to select an image of yourself (JPG or PNG).
-    *   Choose a landmark from the dropdown menu.
-    *   Click "Generate Travel Photo."
-    *   The application will send your image and landmark choice to the backend, which uses AI to generate your personalized travel postcard.
-    *   The generated image will be displayed on the page.
+## 🔑 Environment Variables
 
-## Project Summary (2-3 Sentences)
+Create a `backend/.env` file with:
 
-TravelSnap is an engaging web application that combines a holiday destination explorer with an innovative AI photo placement feature. Users can discover popular travel spots and then upload their own photo to be seamlessly integrated into iconic landmark scenes, creating fun and shareable "travel postcards." This project showcases the creative potential of AI in personalizing digital experiences.
+```env
+GEMINI_API_KEY=your_gemini_api_key
+SERPAPI_API_KEY=your_serpapi_key
+REPLICATE_API_TOKEN=your_replicate_token  # Optional
+```
+
+## 📁 Project Structure
+
+```
+travelsnap/
+├── backend/                 # Flask backend
+│   ├── app.py              # Main application
+│   ├── requirements.txt    # Python dependencies
+│   └── .env               # Environment variables (not in git)
+├── travelsnap-react/       # React frontend
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── pages/         # Page components
+│   │   ├── services/      # API services
+│   │   └── theme/         # Design tokens
+│   ├── public/            # Static assets
+│   └── package.json       # Node dependencies
+├── .gitignore
+└── README.md
+```
+
+## 🎯 Usage
+
+1. **Plan a Trip**
+   - Enter your destination
+   - Set your budget and duration
+   - Select your interests
+   - Click "Generate AI Itinerary"
+
+2. **Create a Postcard**
+   - After generating an itinerary
+   - Click "Create Postcard"
+   - Choose a seasonal theme
+   - Click to flip and see the back
+   - Download as PNG
+
+3. **Generate Weather Card**
+   - Click "3D Weather Card"
+   - AI generates an isometric scene
+   - Download and share
+
+## 🌟 Key Features Explained
+
+### AI Trip Planning
+Uses Google Gemini to analyze your preferences and create optimized itineraries with:
+- Day-by-day activities
+- Cost breakdowns
+- Meal recommendations
+- Travel tips
+- Packing lists
+
+### Real Data Integration
+- **Flights**: Live prices from major airlines
+- **Events**: Concerts, sports, festivals happening during your trip
+- **Weather**: Current conditions and forecasts
+
+### Shareable Postcards
+- Beautiful designs with real destination photos
+- Seasonal themes for year-round engagement
+- 3D flip animation for interactive experience
+- Instagram-ready quality
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Google Gemini AI for intelligent trip planning
+- SerpAPI for real-time travel data
+- Unsplash for beautiful destination photos
+- Material-UI for the component library
+
+## 📧 Contact
+
+For questions or feedback, please open an issue on GitHub.
+
+---
+
+**Built with ❤️ for travelers who want to plan smarter and share better**
