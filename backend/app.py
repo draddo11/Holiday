@@ -1262,8 +1262,31 @@ Professional travel photography, high quality, realistic lighting."""
         print(f"Error generating travel photo: {e}")
         return jsonify({"error": f"Failed to generate image: {str(e)}"}), 500
 
+# Serve React frontend for production
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    # API routes should not serve frontend
+    if path and (path.startswith('api/') or path.startswith('get-') or 
+                 path.startswith('search-') or path.startswith('generate-')):
+        return jsonify({"error": "Not found"}), 404
+    
+    # Serve static files if they exist
+    if path != "" and os.path.exists(os.path.join('static', path)):
+        from flask import send_from_directory
+        return send_from_directory('static', path)
+    
+    # Otherwise serve index.html (for React Router)
+    if os.path.exists('static/index.html'):
+        from flask import send_from_directory
+        return send_from_directory('static', 'index.html')
+    
+    # Fallback for development
+    return jsonify({"message": "TravelSnap API is running"}), 200
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port, debug=False)
 
 
 @app.route('/generate-weather-scene', methods=['POST'])

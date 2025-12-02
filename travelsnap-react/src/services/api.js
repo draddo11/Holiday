@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { logger } from '../utils/logger';
 
-const API_BASE_URL = 'http://127.0.0.1:5001';
+// Use relative URLs in production, localhost in development
+const API_BASE_URL = import.meta.env.PROD 
+  ? '' // Empty string for relative URLs in production
+  : 'http://127.0.0.1:5001'; // Localhost for development
 
 export const getFlightPrices = async (destination, origin = 'New York') => {
   try {
