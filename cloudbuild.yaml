@@ -2,11 +2,11 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/travelsnap:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/travelsnap:$SHORT_SHA', '.']
   
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/travelsnap:$COMMIT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/travelsnap:$SHORT_SHA']
   
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -16,7 +16,7 @@ steps:
       - 'deploy'
       - 'travelsnap'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/travelsnap:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/travelsnap:$SHORT_SHA'
       - '--region'
       - 'us-central1'
       - '--platform'
@@ -32,7 +32,7 @@ steps:
       - 'REPLICATE_API_TOKEN=${_REPLICATE_API_TOKEN},SERPAPI_API_KEY=${_SERPAPI_API_KEY},GEMINI_API_KEY=${_GEMINI_API_KEY}'
 
 images:
-  - 'gcr.io/$PROJECT_ID/travelsnap:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/travelsnap:$SHORT_SHA'
 
 options:
   machineType: 'N1_HIGHCPU_8'
