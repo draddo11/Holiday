@@ -1300,28 +1300,22 @@ def generate_weather_scene():
         temperature = data.get('temperature', '25')
         weather_condition = data.get('weather_condition', 'sunny')
         
-        # Create a detailed prompt for isometric 3D scene
-        prompt = f"""Create a beautiful isometric 3D illustration in a cute miniature diorama style showing {destination}.
+        # Create a detailed prompt for isometric 3D scene (Nano Banana Pro style)
+        # Get current date
+        from datetime import datetime
+        current_date = datetime.now().strftime("%B %d, %Y")
+        
+        prompt = f"""Present a clear, 45° top-down isometric miniature 3D cartoon scene of {destination}, featuring its most iconic landmarks and architectural elements. Use soft, refined textures with realistic PBR materials and gentle, lifelike lighting and shadows. Integrate the current weather conditions ({weather_condition}) directly into the city environment to create an immersive atmospheric mood.
 
-Style: Isometric 3D render, 45-degree angle view, cute and colorful
-Scene composition:
-- A rounded green grass platform/island as the base
-- Small 3D trees (🌲 style) scattered across the platform
-- Miniature 3D buildings and houses in the center
-- A small decorative bridge on one side
-- Snow-capped mountains in the background
-- Blue water/ocean surrounding the platform
-- Fluffy white clouds floating in the sky
-- Weather condition: {weather_condition}
-- Display "{temperature}°C" somewhere visible
+Use a clean, minimalistic composition with a soft, solid-colored background.
 
-Colors: Bright, cheerful pastel colors (green grass, blue water, white clouds)
-Lighting: Soft ambient lighting with subtle shadows for depth
-Quality: High detail, smooth 3D render, professional quality like Blender or Cinema 4D
-Perspective: Clean isometric view from above at 45 degrees
-Background: Light blue sky gradient
+At the top-center, place the title "{destination}" in large bold text, a prominent weather icon beneath it, then the date "{current_date}" (small text) and temperature "{temperature}°C" (medium text).
 
-Make it look like a professional 3D render with depth and dimension."""
+All text must be centered with consistent spacing, and may subtly overlap the tops of the buildings.
+
+Square 1080x1080 dimension.
+
+Style: Professional 3D isometric render with soft pastel colors, realistic PBR materials, gentle ambient lighting, and atmospheric depth."""
         
         print(f"Generating weather scene for {destination} using Gemini Imagen...")
         print(f"Prompt: {prompt}")
