@@ -15,13 +15,10 @@ if ! command -v gcloud &> /dev/null; then
     exit 1
 fi
 
-# Get project ID
-PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
-if [ -z "$PROJECT_ID" ]; then
-    echo "❌ Error: No GCP project configured"
-    echo "Run: gcloud config set project YOUR_PROJECT_ID"
-    exit 1
-fi
+# Set project ID
+PROJECT_ID="gen-lang-client-0613158115"
+echo "Setting GCP project to: $PROJECT_ID"
+gcloud config set project $PROJECT_ID
 
 echo "📦 Project: $PROJECT_ID"
 
