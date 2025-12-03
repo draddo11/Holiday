@@ -814,84 +814,45 @@ def generate_ai_itinerary():
     try:
         print(f"Generating AI itinerary for {destination}, {days} days, ${budget} budget")
         
-        # Fetch real data by making internal requests
-        # We'll use a simpler approach - just fetch the data directly
-        flights_data = {}
-        hotels_data = {}
-        events_data = {}
-        weather_data = {}
+        # Use fast fallback data to speed up itinerary generation
+        # Skip slow API calls and use realistic estimates
+        import random
         
-        # Try to get flight data
-        try:
-            with app.test_request_context(f'/get-flight-prices?destination={destination}&origin={origin}'):
-                flights_response = get_flight_prices()
-                if isinstance(flights_response, tuple):
-                    flights_data = flights_response[0].get_json()
-                else:
-                    flights_data = flights_response.get_json()
-        except Exception as e:
-            print(f"Error fetching flights: {e}")
-            flights_data = {"economy": 800, "premium": 1500, "business": 2500}
+        # Fast flight estimates based on destination
+        base_flight_prices = {
+            'Paris': 650, 'London': 600, 'Rome': 580, 'Barcelona': 620,
+            'Tokyo': 850, 'Bangkok': 780, 'Singapore': 900, 'Dubai': 800,
+            'Sydney': 1200, 'New York': 350, 'Los Angeles': 380, 'Miami': 320,
+        }
+        base_flight = base_flight_prices.get(destination, 750)
+        flights_data = {
+            "economy": base_flight + random.randint(-50, 50),
+            "premium": int(base_flight * 1.8),
+            "business": int(base_flight * 3.2)
+        }
         
-        # Try to get hotel data
-        try:
-            with app.test_request_context(f'/get-hotel-prices?destination={destination}'):
-                hotels_response = get_hotel_prices()
-                if isinstance(hotels_response, tuple):
-                    hotels_data = hotels_response[0].get_json()
-                else:
-                    hotels_data = hotels_response.get_json()
-        except Exception as e:
-            print(f"Error fetching hotels: {e}")
-            hotels_data = {"budget": 60, "standard": 120, "luxury": 300}
+        # Fast hotel estimates
+        base_hotel_prices = {
+            'Paris': {'budget': 80, 'standard': 150, 'luxury': 400},
+            'London': {'budget': 90, 'standard': 180, 'luxury': 500},
+            'Tokyo': {'budget': 60, 'standard': 120, 'luxury': 350},
+            'Dubai': {'budget': 100, 'standard': 200, 'luxury': 600},
+            'New York': {'budget': 120, 'standard': 250, 'luxury': 600},
+        }
+        hotels_data = base_hotel_prices.get(destination, {'budget': 60, 'standard': 120, 'luxury': 300})
         
-        # Try to get events data
-        try:
-            with app.test_request_context(f'/get-live-events?destination={destination}'):
-                events_response = get_live_events()
-                if isinstance(events_response, tuple):
-                    events_data = events_response[0].get_json()
-                else:
-                    events_data = events_response.get_json()
-        except Exception as e:
-            print(f"Error fetching events: {e}")
-            events_data = {"events": []}
-        
-        # Try to get weather data
-        try:
-            with app.test_request_context(f'/get-weather?destination={destination}'):
-                weather_response = get_weather()
-                if isinstance(weather_response, tuple):
-                    weather_data = weather_response[0].get_json()
-                else:
-                    weather_data = weather_response.get_json()
-        except Exception as e:
-            print(f"Error fetching weather: {e}")
-            weather_data = {"temperature": "20°C", "condition": "Pleasant"}
+        # Skip events and weather - not critical for itinerary speed
+        events_data = {"events": []}
+        weather_data = {"temperature": "Pleasant", "condition": "Clear"}
         
         # Build context for AI
         interests_str = ", ".join(interests) if interests else "general sightseeing, culture, food"
         
-        prompt = f"""You are an expert travel planner. Create a detailed {days}-day itinerary for {destination} with a budget of ${budget} USD.
+        prompt = f"""Create a {days}-day travel itinerary for {destination}, budget ${budget} USD, interests: {interests_str}.
 
-**REAL DATA AVAILABLE:**
-- Flights from {origin}: Economy ${flights_data.get('economy', 'N/A')}, Premium ${flights_data.get('premium', 'N/A')}, Business ${flights_data.get('business', 'N/A')}
-- Hotels per night: Budget ${hotels_data.get('budget', 'N/A')}, Standard ${hotels_data.get('standard', 'N/A')}, Luxury ${hotels_data.get('luxury', 'N/A')}
-- Weather: {weather_data.get('temperature', 'N/A')}, {weather_data.get('condition', 'N/A')}
-- Available Events: {len(events_data.get('events', []))} events found
+Flights: ${flights_data.get('economy')} economy, Hotels: ${hotels_data.get('standard')}/night
 
-**TRAVELER INTERESTS:** {interests_str}
-
-**REQUIREMENTS:**
-1. Optimize for the ${budget} budget
-2. Include realistic daily costs
-3. Recommend specific hotels based on budget
-4. Include actual events from the data
-5. Provide time-optimized daily schedules
-6. Include meal recommendations
-7. Add travel tips and local insights
-
-Return ONLY a valid JSON object (no markdown, no extra text):
+Return ONLY valid JSON (no markdown):
 {{
     "destination": "{destination}",
     "duration": {days},
