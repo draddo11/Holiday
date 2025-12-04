@@ -100,3 +100,28 @@ export const generateWeatherScene = async (destination, temperature, weatherCond
     throw error;
   }
 };
+
+export const generateItineraryPDF = async (itinerary) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/generate-itinerary-pdf`, {
+      itinerary
+    }, {
+      responseType: 'blob'  // Important for PDF download
+    });
+    
+    // Create download link
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${itinerary.destination.replace(/\s+/g, '_')}_Itinerary.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+    
+    return { success: true };
+  } catch (error) {
+    logger.error('Error generating PDF:', error);
+    throw error;
+  }
+};

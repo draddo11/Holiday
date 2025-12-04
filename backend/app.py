@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import replicate
 import os
@@ -12,6 +12,12 @@ import json
 from datetime import datetime, timedelta
 import google.generativeai as genai
 from rembg import remove
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 
 import logging
@@ -1244,6 +1250,143 @@ def serve_frontend(path):
     
     # Fallback for development
     return jsonify({"message": "TravelSnap API is running"}), 200
+
+@app.route('/generate-itinerary-pdf', methods=['POST'])
+def generate_itinerary_pdf():
+    """Generate a beautifully formatted PDF from itinerary data"""
+    try:
+        data = request.json
+        itinerary = data.get('itinerary')
+        
+        if not itinerary:
+            return jsonify({"error": "Missing itinerary data"}), 400
+        
+        # Create PDF in memory
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
+        story = []
+        styles = getSampleStyleSheet()
+        
+        # Custom styles
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            textColor=colors.HexColor('#2563EB'),
+            spaceAfter=30,
+            alignment=TA_CENTER
+        )
+        
+        heading_style = ParagraphStyle(
+            'CustomHeading',
+            parent=styles['Heading2'],
+            fontSize=16,
+            textColor=colors.HexColor('#1E40AF'),
+            spaceAfter=12,
+            spaceBefore=12
+        )
+        
+        # Title
+        destination = itinerary.get('destination', 'Your Destination')
+        duration = itinerary.get('duration', 3)
+        story.append(Paragraph(f"🌍 {destination} Travel Itinerary", title_style))
+        story.append(Paragraph(f"{duration}-Day Adventure", styles['Heading3']))
+        story.append(Spacer(1, 0.3*inch))
+        
+        # Budget Summary
+        story.append(Paragraph("💰 Budget Overview", heading_style))
+        cost_breakdown = itinerary.get('costBreakdown', {})
+        budget_data = [
+            ['Category', 'Amount'],
+            ['Flights', f"${cost_breakdown.get('flights', 0)}"],
+            ['Accommodation', f"${cost_breakdown.get('accommodation', 0)}"],
+            ['Activities', f"${cost_breakdown.get('activities', 0)}"],
+            ['Food', f"${cost_breakdown.get('food', 0)}"],
+            ['Transportation', f"${cost_breakdown.get('transportation', 0)}"],
+            ['Buffer', f"${cost_breakdown.get('buffer', 0)}"],
+        ]
+        
+        budget_table = Table(budget_data, colWidths=[3*inch, 2*inch])
+        budget_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#3B82F6')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+        ]))
+        story.append(budget_table)
+        story.append(Spacer(1, 0.3*inch))
+        
+        # Daily Itinerary
+        daily_itinerary = itinerary.get('dailyItinerary', [])
+        for day_data in daily_itinerary:
+            day_num = day_data.get('day', 1)
+            day_title = day_data.get('title', f'Day {day_num}')
+            
+            story.append(Paragraph(f"📅 Day {day_num}: {day_title}", heading_style))
+            
+            # Activities
+            activities = day_data.get('activities', [])
+            for activity in activities:
+                time_str = activity.get('time', '')
+                activity_name = activity.get('activity', '')
+                description = activity.get('description', '')
+                cost = activity.get('cost', 0)
+                location = activity.get('location', '')
+                
+                activity_text = f"<b>{time_str} - {activity_name}</b> (${cost})<br/>"
+                activity_text += f"{description}<br/>"
+                activity_text += f"📍 {location}"
+                
+                story.append(Paragraph(activity_text, styles['Normal']))
+                story.append(Spacer(1, 0.1*inch))
+            
+            # Meals
+            meals = day_data.get('meals', {})
+            if meals:
+                meals_text = f"<b>🍽️ Meals:</b><br/>"
+                meals_text += f"Breakfast: {meals.get('breakfast', 'N/A')}<br/>"
+                meals_text += f"Lunch: {meals.get('lunch', 'N/A')}<br/>"
+                meals_text += f"Dinner: {meals.get('dinner', 'N/A')}"
+                story.append(Paragraph(meals_text, styles['Normal']))
+            
+            story.append(Spacer(1, 0.2*inch))
+        
+        # Travel Tips
+        travel_tips = itinerary.get('travelTips', [])
+        if travel_tips:
+            story.append(PageBreak())
+            story.append(Paragraph("💡 Travel Tips", heading_style))
+            for tip in travel_tips:
+                story.append(Paragraph(f"• {tip}", styles['Normal']))
+                story.append(Spacer(1, 0.1*inch))
+        
+        # Packing List
+        packing_list = itinerary.get('packingList', [])
+        if packing_list:
+            story.append(Spacer(1, 0.2*inch))
+            story.append(Paragraph("🎒 Packing List", heading_style))
+            for item in packing_list:
+                story.append(Paragraph(f"☐ {item}", styles['Normal']))
+        
+        # Build PDF
+        doc.build(story)
+        buffer.seek(0)
+        
+        # Return PDF file
+        return send_file(
+            buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f'{destination.replace(" ", "_")}_Itinerary.pdf'
+        )
+        
+    except Exception as e:
+        print(f"Error generating PDF: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
