@@ -476,8 +476,29 @@ Planned with TravelSnap AI 🚀`;
                     <Typography variant="h3" sx={{ fontWeight: 800 }}>
                       ${itinerary.budgetSummary?.totalEstimated || itinerary.totalBudget}
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    <Typography variant="body2" sx={{ opacity: 0.8, mb: 2 }}>
                       Total Estimated Cost
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<Download />}
+                      onClick={async () => {
+                        try {
+                          const { generateItineraryPDF } = await import('../services/api');
+                          await generateItineraryPDF(itinerary);
+                        } catch (error) {
+                          console.error('Error downloading PDF:', error);
+                        }
+                      }}
+                      sx={{
+                        bgcolor: 'white',
+                        color: colors.primary[600],
+                        '&:hover': { bgcolor: colors.neutral[100] },
+                        fontWeight: 600,
+                        px: 3
+                      }}
+                    >
+                      Download PDF
                     </Typography>
                   </Grid>
                 </Grid>
