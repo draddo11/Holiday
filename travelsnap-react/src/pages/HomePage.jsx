@@ -115,11 +115,11 @@ function HomePage() {
           >
             <Button
               component={Link}
-              to="/ai-photo"
+              to="/ai-trip-planner"
               variant="contained"
               size="large"
               endIcon={<ArrowForward aria-hidden="true" />}
-              aria-label="Start creating AI-powered travel photos"
+              aria-label="Start planning your AI-powered trip"
               sx={{
                 backgroundColor: colors.primary[600],
                 px: { xs: spacing[5], sm: spacing[6], md: spacing[6] },
@@ -135,7 +135,7 @@ function HomePage() {
                 }
               }}
             >
-              Start Creating
+              Start Planning
             </Button>
 
             <Button
