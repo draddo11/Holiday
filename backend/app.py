@@ -28,6 +28,10 @@ CORS(app) # Allow all origins for debugging
 
 logging.basicConfig(level=logging.DEBUG)
 
+# Simple in-memory cache for itineraries (expires after 1 hour)
+itinerary_cache = {}
+CACHE_EXPIRY = 3600  # 1 hour in seconds
+
 @app.before_request
 def log_request_info():
     print(f"Incoming request: {request.method} {request.path}")
@@ -45,8 +49,8 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Available models - using Gemini 2.5 Flash (fast and reliable)
-GEMINI_MODEL = 'models/gemini-2.5-flash'
+# Available models - using Gemini 2.0 Flash (different safety profile)
+GEMINI_MODEL = 'models/gemini-2.0-flash'
 
 # Initialize Replicate client
 os.environ["REPLICATE_API_TOKEN"] = REPLICATE_API_TOKEN
@@ -817,6 +821,20 @@ def generate_ai_itinerary():
     if not destination:
         return jsonify({"error": "Missing destination parameter"}), 400
     
+    # Create cache key
+    interests_key = ','.join(sorted(interests)) if interests else 'general'
+    cache_key = f"{destination}_{days}_{budget}_{interests_key}"
+    
+    # Check cache first
+    if cache_key in itinerary_cache:
+        cached_data, timestamp = itinerary_cache[cache_key]
+        if time.time() - timestamp < CACHE_EXPIRY:
+            print(f"✓ Returning cached itinerary for {destination}")
+            return jsonify(cached_data), 200
+        else:
+            # Remove expired cache
+            del itinerary_cache[cache_key]
+    
     try:
         print(f"Generating AI itinerary for {destination}, {days} days, ${budget} budget")
         
@@ -854,65 +872,48 @@ def generate_ai_itinerary():
         # Build context for AI
         interests_str = ", ".join(interests) if interests else "general sightseeing, culture, food"
         
-        prompt = f"""Create a {days}-day travel itinerary for {destination}, budget ${budget} USD, interests: {interests_str}.
+        # Simplified prompt to avoid safety blocks
+        prompt = f"""Create a {days}-day travel itinerary for {destination} with a ${budget} budget.
 
-Flights: ${flights_data.get('economy')} economy, Hotels: ${hotels_data.get('standard')}/night
+Traveler interests: {interests_str}
+Flight estimate: ${flights_data.get('economy')}
+Hotel estimate: ${hotels_data.get('standard')}/night
 
-Return ONLY valid JSON (no markdown):
-{{
-    "destination": "{destination}",
-    "duration": {days},
-    "totalBudget": {budget},
-    "costBreakdown": {{
-        "flights": <recommended flight cost>,
-        "accommodation": <total hotel cost for {days} nights>,
-        "activities": <estimated activities cost>,
-        "food": <estimated food cost>,
-        "transportation": <local transport cost>,
-        "buffer": <emergency buffer>
-    }},
-    "recommendedFlight": "<economy/premium/business based on budget>",
-    "recommendedHotel": "<budget/standard/luxury based on budget>",
-    "dailyItinerary": [
-        {{
-            "day": 1,
-            "title": "<day theme>",
-            "activities": [
-                {{
-                    "time": "<HH:MM>",
-                    "activity": "<activity name>",
-                    "description": "<brief description>",
-                    "duration": "<duration in hours>",
-                    "cost": <estimated cost in USD>,
-                    "location": "<specific location>",
-                    "tips": "<helpful tip>"
-                }}
-            ],
-            "meals": {{
-                "breakfast": "<recommendation with cost>",
-                "lunch": "<recommendation with cost>",
-                "dinner": "<recommendation with cost>"
-            }},
-            "estimatedDailyCost": <total cost for the day>
-        }}
-    ],
-    "travelTips": [
-        "<practical tip 1>",
-        "<practical tip 2>",
-        "<practical tip 3>"
-    ],
-    "packingList": ["<item 1>", "<item 2>", "<item 3>"],
-    "budgetSummary": {{
-        "totalEstimated": <sum of all costs>,
-        "remaining": <budget - totalEstimated>,
-        "savingsTips": ["<tip 1>", "<tip 2>"]
-    }}
-}}
+Return a JSON object with:
+- destination, duration, totalBudget
+- costBreakdown (flights, accommodation, activities, food, transportation, buffer)
+- recommendedFlight (economy/premium/business)
+- recommendedHotel (budget/standard/luxury)
+- dailyItinerary array with day, title, activities array (time, activity, description, duration, cost, location, tips), meals object, estimatedDailyCost
+- travelTips array
+- packingList array
+- budgetSummary (totalEstimated, remaining, savingsTips array)
 
-Make it realistic, detailed, and optimized for the budget. Include specific times, locations, and costs."""
+Include 3-4 activities per day with specific times and realistic costs."""
 
-        model = genai.GenerativeModel(GEMINI_MODEL)
+        # Configure Gemini for faster response
+        generation_config = {
+            "temperature": 0.7,
+            "top_p": 0.95,
+            "top_k": 40,
+            "max_output_tokens": 4096,  # Limit output for faster generation
+        }
+        
+        # Create model without custom safety settings (use defaults)
+        model = genai.GenerativeModel(
+            GEMINI_MODEL,
+            generation_config=generation_config
+        )
+        
+        # Use generate_content with timeout
         response = model.generate_content(prompt)
+        
+        # Check if response was blocked
+        if not response.candidates or not response.candidates[0].content.parts:
+            print(f"Warning: Response blocked or empty. Finish reason: {response.candidates[0].finish_reason if response.candidates else 'No candidates'}")
+            # Use fallback response
+            raise ValueError("AI response was blocked or empty")
+        
         text_response = response.text.strip()
         
         # Clean up markdown formatting
@@ -926,7 +927,20 @@ Make it realistic, detailed, and optimized for the budget. Include specific time
         json_end = text_response.rfind('}') + 1
         if json_start != -1 and json_end > json_start:
             json_response = text_response[json_start:json_end]
-            itinerary_data = json.loads(json_response)
+            
+            # Try to parse JSON, with error handling
+            try:
+                itinerary_data = json.loads(json_response)
+            except json.JSONDecodeError as e:
+                print(f"JSON parse error: {e}")
+                print(f"Problematic JSON snippet: {json_response[max(0, e.pos-100):e.pos+100]}")
+                # Try to fix common JSON issues
+                json_response = json_response.replace('\n', ' ').replace('\r', '')
+                json_response = json_response.replace('\\', '\\\\')
+                try:
+                    itinerary_data = json.loads(json_response)
+                except:
+                    raise ValueError(f"Could not parse JSON from AI response: {str(e)}")
             
             # Add real events data
             itinerary_data['availableEvents'] = events_data.get('events', [])[:5]
@@ -935,6 +949,9 @@ Make it realistic, detailed, and optimized for the budget. Include specific time
                 'flights': flights_data,
                 'hotels': hotels_data
             }
+            
+            # Cache the result
+            itinerary_cache[cache_key] = (itinerary_data, time.time())
             
             print(f"Successfully generated itinerary for {destination}")
             return jsonify(itinerary_data), 200
@@ -1391,155 +1408,3 @@ def generate_itinerary_pdf():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port, debug=False)
-
-
-@app.route('/generate-weather-scene', methods=['POST'])
-def generate_weather_scene():
-    """
-    Generate an isometric 3D weather scene using Gemini's Imagen 3 with seasonal themes
-    """
-    try:
-        data = request.json
-        destination = data.get('destination', 'Paris')
-        temperature = data.get('temperature', '25')
-        weather_condition = data.get('weather_condition', 'sunny')
-        season = data.get('season', None)  # Optional season override
-        
-        # Get current date and determine season
-        from datetime import datetime
-        current_date = datetime.now().strftime("%B %d, %Y")
-        current_month = datetime.now().month
-        
-        # Auto-detect season if not provided
-        if not season:
-            if current_month in [10, 11]:  # Oct-Nov
-                season = 'halloween'
-            elif current_month in [12, 1]:  # Dec-Jan
-                season = 'christmas'
-            elif current_month in [6, 7, 8]:  # Jun-Aug
-                season = 'summer'
-            elif current_month in [3, 4, 5]:  # Mar-May
-                season = 'spring'
-            else:
-                season = 'default'
-        
-        # Seasonal theme elements
-        seasonal_elements = {
-            'halloween': {
-                'emojis': '🎃👻🦇🕷️',
-                'atmosphere': 'spooky twilight with orange and purple hues, jack-o-lanterns scattered around',
-                'decorations': 'Halloween decorations, cobwebs, bats flying',
-                'colors': 'orange, purple, and dark blue tones'
-            },
-            'christmas': {
-                'emojis': '🎄🎅❄️⛄🎁',
-                'atmosphere': 'festive winter wonderland with snow falling, twinkling lights',
-                'decorations': 'Christmas trees, presents, candy canes, snowflakes',
-                'colors': 'red, green, white, and gold tones'
-            },
-            'summer': {
-                'emojis': '☀️🏖️🌊🍹🏄',
-                'atmosphere': 'bright sunny day with clear blue skies, beach vibes',
-                'decorations': 'beach umbrellas, surfboards, palm trees, seashells',
-                'colors': 'bright yellow, turquoise, and sandy beige tones'
-            },
-            'spring': {
-                'emojis': '🌸🌷🦋🌈☘️',
-                'atmosphere': 'fresh spring day with blooming flowers, butterflies',
-                'decorations': 'cherry blossoms, tulips, rainbows, flower gardens',
-                'colors': 'pink, green, and pastel rainbow tones'
-            },
-            'default': {
-                'emojis': '✈️🌍🗺️🧳',
-                'atmosphere': 'clear day with professional travel aesthetic',
-                'decorations': 'travel elements, luggage, maps',
-                'colors': 'blue and neutral tones'
-            }
-        }
-        
-        theme = seasonal_elements.get(season, seasonal_elements['default'])
-        
-        # Create dynamic prompt with seasonal elements
-        prompt = f"""Present a clear, 45° top-down isometric miniature 3D cartoon scene of {destination}, featuring its most iconic landmarks and architectural elements. 
-
-SEASONAL THEME: {season.upper()}
-Integrate these seasonal elements throughout the scene:
-- Atmosphere: {theme['atmosphere']}
-- Decorations: {theme['decorations']}
-- Color palette: {theme['colors']}
-- Thematic emojis to incorporate: {theme['emojis']}
-
-WEATHER: {weather_condition}
-Integrate the current weather conditions directly into the city environment to create an immersive atmospheric mood.
-
-COMPOSITION:
-- Use soft, refined textures with realistic PBR materials
-- Gentle, lifelike lighting and shadows
-- Clean, minimalistic composition with a soft, solid-colored background
-- Iconic landmarks should be recognizable but stylized
-
-TEXT OVERLAY (centered at top):
-1. "{destination}" - large bold text
-2. Weather icon - prominent
-3. "{current_date}" - small text
-4. "{temperature}°C" - medium text
-
-All text must be centered with consistent spacing, and may subtly overlap the tops of the buildings.
-
-TECHNICAL SPECS:
-- Square 1080x1080 dimension
-- Professional 3D isometric render
-- Soft pastel colors with seasonal accents
-- Atmospheric depth and dimension
-- High-quality Blender/Cinema 4D style"""
-        
-        print(f"Generating weather scene for {destination} using Gemini Imagen...")
-        print(f"Prompt: {prompt}")
-        
-        # Use Gemini's image generation (Imagen 3)
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        
-        response = model.generate_content([
-            prompt,
-            "Generate this as a high-quality image"
-        ])
-        
-        # Check if image was generated
-        if hasattr(response, 'candidates') and len(response.candidates) > 0:
-            candidate = response.candidates[0]
-            if hasattr(candidate, 'content') and hasattr(candidate.content, 'parts'):
-                for part in candidate.content.parts:
-                    if hasattr(part, 'inline_data'):
-                        # Image was generated
-                        image_data = part.inline_data.data
-                        mime_type = part.inline_data.mime_type
-                        
-                        # Convert to base64 data URL
-                        image_base64 = base64.b64encode(image_data).decode('utf-8')
-                        image_url = f"data:{mime_type};base64,{image_base64}"
-                        
-                        print(f"Generated image successfully!")
-                        
-                        return jsonify({
-                            'success': True,
-                            'image_url': image_url,
-                            'destination': destination,
-                            'temperature': temperature,
-                            'weather_condition': weather_condition
-                        })
-        
-        # If no image in response, fall back to text response
-        print("Gemini did not generate an image, using fallback...")
-        return jsonify({
-            'success': False,
-            'error': 'Gemini did not generate an image. Image generation may not be available in this model.',
-            'message': 'Using fallback emoji-based design'
-        }), 200
-        
-    except Exception as e:
-        print(f"Error generating weather scene: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': str(e),
-            'message': 'Using fallback emoji-based design'
-        }), 200

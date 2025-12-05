@@ -48,7 +48,6 @@ import { generateAIItinerary } from '../services/api';
 import { colors, spacing, borderRadius, shadows, transitions } from '../theme/tokens';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SeasonalPostcardGenerator from '../components/SeasonalPostcardGenerator';
-import WeatherPostcardGenerator from '../components/WeatherPostcardGenerator';
 
 const interestOptions = [
   'Culture & History',
@@ -76,7 +75,6 @@ function AITripPlannerPage() {
   const [itinerary, setItinerary] = useState(null);
   const [error, setError] = useState(null);
   const [postcardOpen, setPostcardOpen] = useState(false);
-  const [weatherCardOpen, setWeatherCardOpen] = useState(false);
 
   const handleInterestToggle = (interest) => {
     setFormData((prev) => ({
@@ -499,7 +497,7 @@ Planned with TravelSnap AI 🚀`;
                       }}
                     >
                       Download PDF
-                    </Typography>
+                    </Button>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -723,24 +721,7 @@ Planned with TravelSnap AI 🚀`;
               >
                 Create Postcard
               </Button>
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<CardGiftcard />}
-                onClick={() => setWeatherCardOpen(true)}
-                sx={{
-                  px: 4,
-                  py: 1.5,
-                  background: `linear-gradient(135deg, #87CEEB 0%, #4A90E2 100%)`,
-                  boxShadow: shadows.glow,
-                  '&:hover': {
-                    boxShadow: shadows.glowHover,
-                    transform: 'translateY(-2px)',
-                  },
-                }}
-              >
-                3D Weather Card
-              </Button>
+
               <Button
                 variant="contained"
                 size="large"
@@ -787,12 +768,7 @@ Planned with TravelSnap AI 🚀`;
               onClose={() => setPostcardOpen(false)}
             />
 
-            {/* 3D Weather Card Generator */}
-            <WeatherPostcardGenerator
-              itinerary={itinerary}
-              open={weatherCardOpen}
-              onClose={() => setWeatherCardOpen(false)}
-            />
+
           </Box>
         )}
 

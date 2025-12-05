@@ -1,0 +1,4 @@
+# file: /Users/draddo11/Documents/KiroHakathon/Final Submission/Holiday/backend/prompt_construction.py
+# hypothesis_version: 6.148.6
+
+['christmas', 'clear', 'cloudy', 'halloween', 'pleasant weather', 'rainy', 'snowy', 'spring', 'summer', 'sunny']

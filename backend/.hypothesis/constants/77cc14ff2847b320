@@ -1,0 +1,4 @@
+# file: /Users/draddo11/Documents/KiroHakathon/Final Submission/Holiday/backend/huggingface_client.py
+# hypothesis_version: 6.148.6
+
+[7.5, 120, 200, 503, 'Authorization', 'guidance_scale', 'inputs', 'negative_prompt', 'num_inference_steps', 'parameters']

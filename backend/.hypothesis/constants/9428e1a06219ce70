@@ -1,0 +1,4 @@
+# file: /Users/draddo11/Documents/KiroHakathon/Final Submission/Holiday/backend/response_builder.py
+# hypothesis_version: 6.148.6
+
+['destination', 'error', 'image_url', 'season', 'success', 'temperature', 'weather_condition']
